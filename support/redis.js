@@ -10,10 +10,10 @@ const queueName = 'twoFactorQueue'
 const queue = new Queue(queueName, { connection })
 
 export const getJob = async () => {
-    const jobs = await queue.getJobs();
+    const jobs = await queue.getJobs() // busca todos os jobs
     return jobs[0].data.code
 }
 
 export const cleanJobs = async () => {
-    await queue.obliterate()
+    await queue.obliterate({ force: true })
 }

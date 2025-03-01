@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { obterCodigo2FA } from '../support/db';
 import { LoginPage } from '../pages/LoginPage';
-import { DashbPage } from '../pages/DashPage';
+import { DashPage } from '../pages/DashPage';
 import { cleanJobs, getJob } from '../support/redis';
 
 test('Nao deve logar quando o codigo de autenticacao e invalido', async ({ page }) => {
@@ -21,7 +21,7 @@ test('Nao deve logar quando o codigo de autenticacao e invalido', async ({ page 
 });
 
 test('Deve acessar a conta do usuário pegando codigo redis', async ({ page }) => {
-  const loginPage = new LoginPage(page)
+const loginPage = new LoginPage(page)
   const dashPage = new DashPage(page)
   
   const usuario = {
@@ -32,8 +32,8 @@ test('Deve acessar a conta do usuário pegando codigo redis', async ({ page }) =
   await cleanJobs()
 
   await loginPage.acessaPagina()
-  await loginPage.informaCpf(usuario.cpf)
-  await loginPage.informaSenha(usuario.senha)
+  await loginPage.preencheCPF(usuario.cpf)
+  await loginPage.preencheSenha(usuario.senha)
 
   // checkpoint
   await page.getByRole('heading', {name: 'Verificação em duas etapas'})
@@ -41,16 +41,14 @@ test('Deve acessar a conta do usuário pegando codigo redis', async ({ page }) =
 
   const codigo = await getJob()
 
-  // const codigo = await obterCodigo2FA(usuario.cpf)
-
-  await loginPage.informe2FA(codigo)
+  await loginPage.preencheCodigo2FA(codigo)
 
   await expect(await dashPage.obterSaldo()).toHaveText('R$ 5.000,00')  
 });
 
 test('Deve acessar a conta do usuário pegando código do banco', async ({ page }) => {
   const loginPage = new LoginPage(page);
-  const dashbPage = new DashbPage(page);
+  const dashPage = new DashPage(page);
 
   const usuario = {
     cpf: '00000014141',
@@ -67,5 +65,5 @@ test('Deve acessar a conta do usuário pegando código do banco', async ({ page 
    const codigo = await obterCodigo2FA(usuario.cpf);
   await loginPage.preencheCodigo2FA(codigo);
 
-  await expect(await dashbPage.obterSaldo()).toHaveText('R$ 5.000,00');
+  await expect(await dashPage.obterSaldo()).toHaveText('R$ 5.000,00');
 });

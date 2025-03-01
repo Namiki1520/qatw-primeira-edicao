@@ -1,4 +1,4 @@
-export class DashbPage {
+export class DashPage {
     constructor(page) {
         this.page = page;
     }
