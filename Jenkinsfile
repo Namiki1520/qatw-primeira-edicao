@@ -21,6 +21,7 @@ pipeline {
             steps {
                 echo "✅ Testando a imagem Docker antes de rodar os testes..."
                 sh 'docker run --rm playwright-node-java-v1-noble node -v'
+                sh 'docker run --rm -it playwright-node-java-v1-noble npm -v'
             }
         }
 
