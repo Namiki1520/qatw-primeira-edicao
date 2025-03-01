@@ -33,4 +33,12 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            script {
+                // Clean up Docker containers
+                sh 'docker container prune -f'
+            }
+        }
+    }
 }
