@@ -36,7 +36,7 @@ pipeline {
         stage('Instalar Dependências Node.js') {
             steps {
                 echo "🔧 Instalando dependências Node.js dentro do container..."
-                sh 'docker run --rm -v $(pwd):/workspace -w /workspace playwright-node-java-v1-noble npm install'
+                sh 'docker run --rm -v "$(pwd):/workspace" -w /workspace playwright-node-java-v1-noble npm install'
             }
         }
 
