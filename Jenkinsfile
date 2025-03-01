@@ -38,6 +38,8 @@ pipeline {
             script {
                 // Clean up Docker containers
                 sh 'docker container prune -f'
+                // Clean up Docker images
+                sh 'docker rmi custom-playwright-image -f'
             }
         }
     }
