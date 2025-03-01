@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'mcr.microsoft.com/playwright:v1.50.1-noble' // Agente original para build da imagem
-            args '--network qatw-primeira-edicao_skynet'
-        }
-    }
+    agent any
 
     stages {
         stage('Build da Imagem Docker Customizada') {
