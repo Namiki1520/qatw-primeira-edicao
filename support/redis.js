@@ -10,7 +10,7 @@ const queueName = 'twoFactorQueue'
 const queue = new Queue(queueName, { connection })
 
 export const getJob = async () => {
-    const jobs = await queue.getJobs(["waiting", "delayed", "active"]);
+    const jobs = await queue.getJob(["waiting", "delayed", "active"]);
 
     if (!jobs.length) {
         console.warn("⚠ Nenhum job encontrado na fila.");
