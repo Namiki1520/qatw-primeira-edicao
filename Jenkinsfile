@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -13,7 +12,16 @@ pipeline {
         stage('Verificar Imagens Disponíveis') {
             steps {
                 echo "🔍 Listando imagens disponíveis..."
-                sh 'docker images | grep playwright-node-java-v1-noble || echo "❌ Imagem não encontrada!"'
+                script {
+                    def imageExists = sh(script: 'docker images -q playwright-node-java-v1-noble', returnStatus: true)
+                    if (imageExists != 0) {
+                        echo "❌ Imagem não encontrada!"
+                        currentBuild.result = 'FAILURE'
+                        return
+                    } else {
+                        echo "✅ Imagem encontrada!"
+                    }
+                }
             }
         }
 
@@ -27,15 +35,16 @@ pipeline {
 
         stage('Instalar Dependências Node.js') {
             steps {
-                sh 'npm install'
+                echo "🔧 Instalando dependências Node.js dentro do container..."
+                sh 'docker run --rm -v $(pwd):/workspace -w /workspace playwright-node-java-v1-noble npm install'
             }
         }
 
         stage('Executar Testes E2E') {
             agent {
                 docker {
-                    image 'playwright-node-java-v1-noble' // Usa a imagem recém-criada para rodar os testes
-                    args '--network qatw-primeira-edicao_skynet'
+                    image 'playwright-node-java-v1-noble'
+                    args '--network qatw-primeira-edicao_skynet' // Só inclua se for necessário
                 }
             }
             steps {
@@ -45,7 +54,8 @@ pipeline {
             }
         }
     }
-} 
+}
+
 // pipeline {
 //     agent {
 //         docker {
